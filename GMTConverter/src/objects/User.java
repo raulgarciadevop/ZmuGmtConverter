@@ -18,54 +18,69 @@ import static javax.swing.JOptionPane.showMessageDialog;
  * @author Administrator
  */
 public class User {
+    //User login data
     private int id_usuario;
     private String nombre_usuario;
     private String clave_usuario;
     private int pin_usuario;
     
+    //User GM Data
+    private String gmName;
+    private int gmt;
+    private String location;
+    private int timeFrom;
+    private int timeTo;
+    private int userRank;
     
-    //private String enteredPass;
-    
+    //Connection variables
     private Connection con;
     private Statement sentencia;
     private String query;
     private String DB_PATH,DB_USER,DB_PASS;
     private int connectionIntents;
     
-    public User(){
+    
+    
+    private void connectionSettings(){
+        //Connection settings
         this.connectionIntents = 0;
-        this.DB_PATH = "jdbc:mysql://mysql6.gear.host/sicfinal";
-        this.DB_USER="sicfinal";
-        this.DB_PASS="Gd5I-LJ-3Z2K";
+        this.DB_PATH = "jdbc:mysql://sql10.freemysqlhosting.net/sql10212066";
+        this.DB_USER="sql10212066";
+        this.DB_PASS="Y1yE5Klb5w";
+    }
+    
+    public User(){
+        connectionSettings();
         
+        //User GM Data
+        this.gmt=0; 
+        this.gmName=null; 
+        this.location=null; 
+        this.timeFrom=0; 
+        this.timeTo=0;
+        this.userRank=0;
     }
     
     public User(String username) {
-        this.connectionIntents = 0;
-        
-        this.DB_PATH = "jdbc:mysql://mysql6.gear.host/sicfinal";
-        this.DB_USER="sicfinal";
-        this.DB_PASS="Gd5I-LJ-3Z2K";
+        //Get user
         this.nombre_usuario=username;
         this.clave_usuario=null;
-        /*TODO: Get data in a new thread and run a loading bar until it's done.
-        Thread dwFDB=new Thread(new DownloadFromDB(username));
-        dwFDB.start();
-        */
         
-        
-        //getDataFromDB(username,password);
+        //User GM Data
+        this.gmt=0; 
+        this.gmName=null; 
+        this.location=null; 
+        this.timeFrom=0; 
+        this.timeTo=0;
+        this.userRank=0;
         getDataFromDB();
-
-//catch(com.mysql.jdbc.exceptions.jdbc4.CommunicationsException e){
-            
-        //}
+        
     }
     
     //private void getDataFromDB(String usr,String pass){
     private void getDataFromDB(){
         try {
-            query = "SELECT * FROM usuario WHERE nombre_usuario='" + nombre_usuario + "'";//+" AND clave_usuario='"+clave_usuario+"'"
+            query = "SELECT * FROM users WHERE user_name='" + nombre_usuario + "'";//+" AND clave_usuario='"+clave_usuario+"'"
 
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(DB_PATH, DB_USER, DB_PASS);
@@ -73,9 +88,17 @@ public class User {
             ResultSet resultado = sentencia.executeQuery(query);
 
             while (resultado.next()) {
-                this.id_usuario=resultado.getInt("id_usuario");
-                this.clave_usuario = resultado.getString("clave_usuario");
-                this.pin_usuario = resultado.getInt("pin_usuario");
+                this.id_usuario=resultado.getInt("id_user");
+                this.clave_usuario = resultado.getString("user_password");
+                this.pin_usuario = resultado.getInt("user_pin");
+                
+                //User GM Data
+                this.gmt=resultado.getInt("gm_gmt");
+                this.gmName=resultado.getString("gm_name"); 
+                this.location=resultado.getString("gm_location");
+                this.timeFrom=resultado.getInt("gm_time_from");
+                this.timeTo=resultado.getInt("gm_time_to");
+                this.userRank=resultado.getInt("gm_rank");
 
             }
             //showMessageDialog(null, "= "+nombre_usuario+" "+clave_usuario+""+id_usuario+" "+pin_usuario+"\n\n"+DB_PATH+"\n"+DB_USER+"\n"+DB_PASS);
@@ -150,6 +173,31 @@ public class User {
 
     public void setPin_usuario(int pin_usuario) {
         this.pin_usuario = pin_usuario;
+    }
+    
+    //public void updateGMT(int gmt,String location, int from, int to){
+        
+    //}
+    
+    public void updateUser(int gmt,String location, int from, int to){
+        
+        try {
+            query="UPDATE users SET gm_gmt ="+gmt+", gm_location = '"+location+"', gm_time_from = "+from+", gm_time_to = "+to+" WHERE users.id_user = "+this.id_usuario;
+            Class.forName("com.mysql.jdbc.Driver");
+            sentencia.executeUpdate(query);
+            getDataFromDB();
+            showMessageDialog(null, "Updated successfully.");
+            
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch(CommunicationsException e){
+            showMessageDialog(null, "Error: System is no available right now.\n\n Error code: 01LSVE ");
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     
