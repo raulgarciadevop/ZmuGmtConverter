@@ -12,12 +12,19 @@ import javax.swing.table.DefaultTableModel;
  * @author FELICIANO
  */
 public class ScheduleMapFrame extends javax.swing.JFrame {
+    private MainFrame mf;
 
     /**
      * Creates new form ScheduleMapForm
      */
     public ScheduleMapFrame() {
         initComponents();
+        dtm=(DefaultTableModel)tblSchedule.getModel();
+    }
+    
+    public ScheduleMapFrame(MainFrame mf) {
+        initComponents();
+        this.mf=mf;
         dtm=(DefaultTableModel)tblSchedule.getModel();
     }
 
@@ -171,7 +178,7 @@ public class ScheduleMapFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Back
-        new MainFrame().setVisible(true);
+        mf.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

@@ -5,7 +5,9 @@
  */
 package main;
 
+import static javax.swing.JOptionPane.showMessageDialog;
 import objects.User;
+import proccess.GMTConverter;
 
 /**
  *
@@ -14,12 +16,14 @@ import objects.User;
 public class RegisterScheduleForm extends javax.swing.JFrame {
     private User user;
     private MainFrame mf;
+    private GMTConverter converter;
 
     /**
      * Creates new form RegisterScheduleForm
      */
     public RegisterScheduleForm() {
         initComponents();
+        converter=new GMTConverter();
     }
     
     public RegisterScheduleForm(User u, MainFrame mf){
@@ -27,6 +31,7 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
         this.user=u;
         this.mf=mf;
         txtGMName.setText(user.getNombre_usuario());
+        converter=new GMTConverter();
     }
 
     /**
@@ -228,12 +233,24 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Handles input proccess
         int gmt=0, from=0,to=0;
+        int afrom, ato;
         String location="";
+        
+        gmt=Integer.parseInt(jcbGMT.getSelectedItem().toString());
+        location=txtLocation.getText();
+        from=jcbFrom.getSelectedIndex();
+        //to=jcbTo.getSelectedIndex();
+        from+=1;
+        to+=1;
+        afrom=converter.convert(from, gmt);
+        ato=converter.convert(to, gmt);
+        
+        showMessageDialog(null, "GMT: "+gmt+", Location:"+location+", From: "+afrom+", To: "+ato);
         
         
         //user.updateUser(Integer.parseInt(jcbGMT.getSelectedItem().toString()), txtLocation.toString(), jcbFrom.getSelectedIndex(), jcbTo.getSelectedIndex());
         
-        user.updateUser(gmt, location, from, to);
+        //user.updateUser(gmt, location, from, to);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

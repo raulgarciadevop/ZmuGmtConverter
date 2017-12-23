@@ -7,6 +7,9 @@ package proccess;
 
 //import static javax.swing.JOptionPane.*;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
+
 /**
  *
  * @author Administrator
@@ -19,7 +22,9 @@ public class GMTConverter {
     
     public int convert(int h,int gmt){
         
-        return h+(gmt*=-1);
+        int agmt=(gmt*=-1);
+        
+        return h+agmt;
     }
     
     

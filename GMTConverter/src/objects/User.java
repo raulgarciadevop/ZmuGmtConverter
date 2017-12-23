@@ -62,6 +62,7 @@ public class User {
     }
     
     public User(String username) {
+        connectionSettings();
         //Get user
         this.nombre_usuario=username;
         this.clave_usuario=null;
@@ -175,6 +176,8 @@ public class User {
         this.pin_usuario = pin_usuario;
     }
     
+    
+    
     //public void updateGMT(int gmt,String location, int from, int to){
         
     //}
@@ -198,6 +201,54 @@ public class User {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getGmName() {
+        return gmName;
+    }
+
+    public void setGmName(String gmName) {
+        this.gmName = gmName;
+    }
+
+    public int getGmt() {
+        return gmt;
+    }
+
+    public void setGmt(int gmt) {
+        this.gmt = gmt;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getTimeFrom() {
+        return timeFrom;
+    }
+
+    public void setTimeFrom(int timeFrom) {
+        this.timeFrom = timeFrom;
+    }
+
+    public int getTimeTo() {
+        return timeTo;
+    }
+
+    public void setTimeTo(int timeTo) {
+        this.timeTo = timeTo;
+    }
+
+    public int getUserRank() {
+        return userRank;
+    }
+
+    public void setUserRank(int userRank) {
+        this.userRank = userRank;
     }
     
     
