@@ -1,0 +1,53 @@
+http://www.phpmyadmin.co
+
+Server: sql10.freemysqlhosting.net
+Name: sql10212066
+Username: sql10212066
+Password: Y1yE5Klb5w
+Port number: 3306
+---
+users
+
+int: id_user
+string: user_name
+string: user_password
+int: user_pin
+
+string: gm_name
+int: gm_gmt<
+string: gm_location<
+int: gm_time_from<
+int: gm_time_to<
+int: gm_rank
+
+---------
+
+GMT -12
+GMT -11
+GMT -10
+GMT -9
+GMT -8
+GMT -7
+GMT -6
+GMT -5
+GMT -4
+GMT -3
+GMT -2
+GMT -1
+GMT -0
+GMT +1
+GMT +2
+GMT +3
+GMT +4
+GMT +5
+GMT +6
+GMT +7
+GMT +8
+GMT +9
+GMT +10
+GMT +11
+GMT +12
+GMT +13
+
+
+INSERT INTO `users` (`id_user`, `user_name`, `user_password`, `user_pin`, `gm_name`, `gm_gmt`, `gm_location`, `gm_time_from`, `gm_time_to`, `gm_rank`) VALUES ('0', 'gn4r1yzmu', 'password', '1234', 'Youngware', '-7', 'Mexico', '14', '21', '4')
