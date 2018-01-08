@@ -57,8 +57,8 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jcbGMT = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnBackCancel = new javax.swing.JButton();
+        btnProceed = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -75,7 +75,7 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtAppTitle)
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,17 +162,17 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
 
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnBackCancel.setText("Cancel");
+        btnBackCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnBackCancelActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Proceed");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnProceed.setText("Proceed");
+        btnProceed.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnProceedActionPerformed(evt);
             }
         });
 
@@ -182,9 +182,9 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton2)
+                .addComponent(btnBackCancel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnProceed)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -192,8 +192,8 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(btnBackCancel)
+                    .addComponent(btnProceed))
                 .addContainerGap())
         );
 
@@ -219,40 +219,67 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnBackCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackCancelActionPerformed
         // Cancel
         mf.setVisible(true);
         this.dispose();
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnBackCancelActionPerformed
 
     private void txtLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLocationActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtLocationActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnProceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProceedActionPerformed
         // Handles input proccess
         int gmt=0, from=0,to=0;
         int afrom, ato;
         String location="";
         
         gmt=Integer.parseInt(jcbGMT.getSelectedItem().toString());
-        location=txtLocation.getText();
-        from=jcbFrom.getSelectedIndex();
-        //to=jcbTo.getSelectedIndex();
-        from+=1;
-        to+=1;
-        afrom=converter.convert(from, gmt);
-        ato=converter.convert(to, gmt);
         
-        showMessageDialog(null, "GMT: "+gmt+", Location:"+location+", From: "+afrom+", To: "+ato);
-        
-        
-        //user.updateUser(Integer.parseInt(jcbGMT.getSelectedItem().toString()), txtLocation.toString(), jcbFrom.getSelectedIndex(), jcbTo.getSelectedIndex());
-        
-        //user.updateUser(gmt, location, from, to);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        if(txtLocation.getText().isEmpty()){
+            showMessageDialog(null, "Please input your location.");
+            txtLocation.requestFocus();
+        }else{
+            location=txtLocation.getText();
+            
+            if (jcbFrom.getSelectedIndex() == jcbFrom.getItemCount() - 1) {
+                from = 0;
+            } else {
+                from = jcbFrom.getSelectedIndex();
+                from += 1;
+            }
+            if (jcbTo.getSelectedIndex() == jcbTo.getItemCount() - 1) {
+                to = 0;
+            } else {
+                to = jcbTo.getSelectedIndex();
+                to += 1;
+            }
 
+            afrom = converter.convert(from, gmt);
+            ato = converter.convert(to, gmt);
+
+            try {
+                user.updateUser(gmt, location, from, to);
+                showMessageDialog(null, "Current user's (" + user.getGmName() + ") following data has been updated successfully:\n"
+                        + "\nGMT: " + gmt
+                        + "\nLocation: " + location
+                        + "\nAvailable from: " + afrom
+                        + "\nTo: " + ato
+                        + "\n\nTime shown has been converted to GMT+0 already.");
+
+            } catch (Exception e) {
+                showMessageDialog(null, "Unexpected error.");
+            }
+
+            mf.setVisible(true);
+            this.dispose();
+        }
+        
+    }//GEN-LAST:event_btnProceedActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -289,8 +316,8 @@ public class RegisterScheduleForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnBackCancel;
+    private javax.swing.JButton btnProceed;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

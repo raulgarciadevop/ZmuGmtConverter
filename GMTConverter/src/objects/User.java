@@ -6,6 +6,7 @@
 package objects;
 
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
+import globals.GlobalVars;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -44,9 +45,9 @@ public class User {
     private void connectionSettings(){
         //Connection settings
         this.connectionIntents = 0;
-        this.DB_PATH = "jdbc:mysql://sql10.freemysqlhosting.net/sql10212066";
-        this.DB_USER="sql10212066";
-        this.DB_PASS="Y1yE5Klb5w";
+        this.DB_PATH = new GlobalVars().getPath();
+        this.DB_USER= new GlobalVars().getUser();
+        this.DB_PASS= new GlobalVars().getPass();
     }
     
     public User(){
@@ -178,7 +179,7 @@ public class User {
     
     
     
-    //public void updateGMT(int gmt,String location, int from, int to){
+    //public void updateUser(int gmt,String location, int from, int to){
         
     //}
     
@@ -190,6 +191,31 @@ public class User {
             sentencia.executeUpdate(query);
             getDataFromDB();
             showMessageDialog(null, "Updated successfully.");
+            
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch(CommunicationsException e){
+            showMessageDialog(null, "Error: System is no available right now.\n\n Error code: 01LSVE ");
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void createUser(String user, String pass, int pin, String gmName, int rankk){
+        int idd=0;
+        
+        try {
+            //"INSERT INTO users VALUES (0, '"+user+"', '"+pass+"', "+pin+", '"+gmName+"', '0', 'null', '0', '0', "+rankk)
+            query="INSERT INTO users VALUES (0, '"+user+"', '"+pass+"', "+pin+", '"+gmName+"', 0, 'null', 0, 0, "+rankk+")";
+            Class.forName("com.mysql.jdbc.Driver");
+            sentencia.executeUpdate(query);
+            //getDataFromDB();
+            User uss=new User(user);
+            
+            showMessageDialog(null, "Created user with GM Name \""+uss.getGmName()+"\" and rank "+uss.getUserRank()+" successfully.\n\nPlease provide following details to the user:\nUsername: "+uss.getNombre_usuario()+"\nPassword: "+uss.getClave_usuario()+"\nTemporal pin: "+uss.getPin_usuario());
             
 
         } catch (ClassNotFoundException e) {

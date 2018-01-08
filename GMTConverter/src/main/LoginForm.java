@@ -446,7 +446,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         txtAppTitle.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         txtAppTitle.setForeground(new java.awt.Color(255, 255, 255));
-        txtAppTitle.setText("GMT Converter");
+        txtAppTitle.setText("ZhyperGM Tools");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

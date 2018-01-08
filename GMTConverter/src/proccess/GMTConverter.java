@@ -23,8 +23,11 @@ public class GMTConverter {
     public int convert(int h,int gmt){
         
         int agmt=(gmt*=-1);
-        
-        return h+agmt;
+        int ah=h+agmt;
+        if(h+agmt>24){
+            ah-=24;
+        }
+        return ah;
     }
     
     
