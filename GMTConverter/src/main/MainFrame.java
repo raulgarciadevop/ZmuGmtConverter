@@ -28,7 +28,7 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         actualUser=u;
         if(actualUser.getUserRank()<3)btnManageU.setVisible(false);
-        txtAppTitle.setText("GMT Converter - Welcome "+actualUser.getNombre_usuario());
+        txtAppTitle.setText("ZhyperGM Tools - Welcome "+actualUser.getGmName());
     }
 
     /**

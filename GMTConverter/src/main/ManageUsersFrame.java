@@ -6,6 +6,7 @@
 package main;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Random;
 //import static java.lang.Math.random;
 //import static java.lang.StrictMath.random;
@@ -20,28 +21,23 @@ public class ManageUsersFrame extends javax.swing.JFrame {
     private MainFrame mf;
     private User user;
     private int pin;//(lblPin)
+    ArrayList<User> userList;
 
     /**
      * Creates new form ManageUsersFrame
      */
     public ManageUsersFrame() {
         initComponents();
-        
-        btnProceed.setBackground(Color.green);
-        lblRemove.setVisible(false);
-        jcbGMName.setVisible(false);
-        lblRemove.setVisible(false);
+        this.userList = user.getFullList();        
+        visualConfigs(0);
     }
     
     public ManageUsersFrame(User u,MainFrame mff){
         initComponents();
         this.mf=mff;
         this.user=u;
-        
-        btnProceed.setBackground(Color.green);
-        lblRemove.setVisible(false);
-        jcbGMName.setVisible(false);
-        lblRemove.setVisible(false);
+        this.userList = user.getFullList();
+        visualConfigs(0);
     }
 
     /**
@@ -60,7 +56,6 @@ public class ManageUsersFrame extends javax.swing.JFrame {
         jcbOperation = new javax.swing.JComboBox<>();
         pCreate = new javax.swing.JPanel();
         lblUsername = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         lblPin = new javax.swing.JLabel();
         lblGMName = new javax.swing.JLabel();
         txtGMName = new javax.swing.JTextField();
@@ -71,6 +66,7 @@ public class ManageUsersFrame extends javax.swing.JFrame {
         txtPassword = new javax.swing.JTextField();
         lblRemove = new javax.swing.JLabel();
         jcbGMName = new javax.swing.JComboBox<>();
+        txtPin = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         btnBackCancel = new javax.swing.JButton();
         btnProceed = new javax.swing.JButton();
@@ -114,11 +110,9 @@ public class ManageUsersFrame extends javax.swing.JFrame {
 
         lblUsername.setText("Username:");
 
-        jLabel6.setText("Pin:");
+        lblPin.setText("Pin:");
 
-        lblPin.setText("-");
-
-        lblGMName.setText("GM Name:");
+        lblGMName.setText("New GM Name:");
 
         lblGMRank.setText("GM Rank:");
 
@@ -135,6 +129,11 @@ public class ManageUsersFrame extends javax.swing.JFrame {
         lblRemove.setText("GM Name:");
 
         jcbGMName.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jcbGMName.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbGMNameItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout pCreateLayout = new javax.swing.GroupLayout(pCreate);
         pCreate.setLayout(pCreateLayout);
@@ -146,17 +145,17 @@ public class ManageUsersFrame extends javax.swing.JFrame {
                     .addComponent(lblRemove)
                     .addComponent(lblGMRank)
                     .addComponent(lblGMName)
-                    .addComponent(jLabel6)
+                    .addComponent(lblPin)
                     .addComponent(lblPassword)
                     .addComponent(lblUsername))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pCreateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblPin)
                     .addComponent(jcbRank, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcbGMName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                     .addComponent(txtPassword)
-                    .addComponent(txtGMName))
+                    .addComponent(txtGMName)
+                    .addComponent(txtPin))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pCreateLayout.setVerticalGroup(
@@ -176,8 +175,8 @@ public class ManageUsersFrame extends javax.swing.JFrame {
                     .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pCreateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(lblPin))
+                    .addComponent(lblPin)
+                    .addComponent(txtPin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pCreateLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGMName)
@@ -279,14 +278,11 @@ public class ManageUsersFrame extends javax.swing.JFrame {
         // Cancel
         mf.setVisible(true);
         this.dispose();
-
     }//GEN-LAST:event_btnBackCancelActionPerformed
 
     private void btnProceedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProceedActionPerformed
         switch(jcbOperation.getSelectedIndex()){
             case 0:
-                
-                
                 createU();
                 break;
             case 1:
@@ -305,14 +301,45 @@ public class ManageUsersFrame extends javax.swing.JFrame {
         
         user.createUser(txtUsername.getText(),txtPassword.getText(),pni,txtGMName.getText(), jcbRank.getSelectedIndex());
         showMessageDialog(null, "User: "+txtUsername.getText()+"\nPass: "+txtPassword.getText()+"\nPin: "+pni+"\nGM Name: "+txtGMName.getText()+"\nRank: "+ jcbRank.getSelectedIndex());
+        
+        userList=user.getFullList();
+        jcbGMName.removeAllItems();
+                userList.forEach((nom) -> {
+                    jcbGMName.addItem(nom.getGmName());
+                });
+                clearFields();
     }
     
     private void removeU(){
+        user.removeUser(String.valueOf(jcbGMName.getSelectedItem()));
+        userList=user.getFullList();
+        jcbGMName.removeAllItems();
+                userList.forEach((nom) -> {
+                    jcbGMName.addItem(nom.getGmName());
+                });
         
     }
     
     private void updateU(){
+        String actualGMName, usr, pas, gmN;
+        int pi,ran;
+        actualGMName = String.valueOf(jcbGMName.getSelectedItem());
+        usr=txtUsername.getText();
+        pas=txtPassword.getText();
+        pi=Integer.parseInt(txtPin.getText());
+        ran=jcbRank.getSelectedIndex();
+        gmN=txtGMName.getText();
+        String opts="";
+        //TODO: Ask for confirmation
         
+        user.updateUser(actualGMName, usr, pas, pi, gmN, ran);
+        
+        userList=user.getFullList();
+        jcbGMName.removeAllItems();
+                userList.forEach((nom) -> {
+                    jcbGMName.addItem(nom.getGmName());
+                });
+                clearFields();
     }
     
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
@@ -323,32 +350,126 @@ public class ManageUsersFrame extends javax.swing.JFrame {
         btnProceed.setText(jcbOperation.getSelectedItem().toString());
         switch(evt.getItem().toString()){
             case "Create"://Create
-                btnProceed.setBackground(Color.green);
-                lblRemove.setVisible(false);
-                jcbGMName.setVisible(false);
-                lblRemove.setVisible(false);
-                
-                txtPassword.setVisible(true);
-                txtGMName.setVisible(true);
-                
+                visualConfigs(0);
                 break;
                 
             case "Remove"://Remove
-                btnProceed.setBackground(Color.red);
-                lblRemove.setVisible(true);
-                jcbGMName.setVisible(true);
-                lblRemove.setVisible(true);
-                
-                txtGMName.setVisible(false);
-                txtPassword.setVisible(false);
+                visualConfigs(1);
                 break;
                 
             case "Update"://Update
-                btnProceed.setBackground(Color.yellow);
+                visualConfigs(2);
+                
                 break;
         }
     }//GEN-LAST:event_jcbOperationItemStateChanged
 
+    private void jcbGMNameItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbGMNameItemStateChanged
+        userList.forEach((nom) -> {
+                    if(nom.getGmName().equals(String.valueOf(jcbGMName.getSelectedItem()))){
+                        txtUsername.setText(nom.getNombre_usuario());
+                        txtPassword.setText("");
+                        txtPin.setText(String.valueOf(nom.getPin_usuario()));
+                        txtGMName.setText(nom.getGmName());
+                        jcbRank.setSelectedIndex(nom.getUserRank());
+                    }
+                });
+        
+    }//GEN-LAST:event_jcbGMNameItemStateChanged
+
+    private void visualConfigs(int opt){
+        switch(opt){
+            case 0://Create
+                clearFields();
+                btnProceed.setBackground(Color.green);
+                txtUsername.setVisible(true);
+                txtPassword.setVisible(true);
+                lblUsername.setVisible(true);
+                lblPassword.setVisible(true);
+                lblPin.setVisible(true);
+                txtGMName.setVisible(true);
+                lblGMName.setVisible(true);
+                lblGMRank.setVisible(true);
+                lblPin.setVisible(true);
+                jcbGMName.setVisible(false);
+                lblRemove.setVisible(false);
+                txtPin.setVisible(true);
+                txtPin.setEnabled(false);
+                jcbRank.setVisible(true);
+                jcbRank.setEnabled(true);
+                txtUsername.setEnabled(true);
+                
+                break;
+                
+            case 1://Remove
+                clearFields();
+                btnProceed.setBackground(Color.red);
+                lblRemove.setVisible(true);
+                jcbGMName.setVisible(true);
+                lblGMRank.setVisible(true);
+                jcbRank.setVisible(true);
+                jcbRank.setEnabled(false);
+                lblPassword.setVisible(false);
+                txtPassword.setVisible(false);
+                lblPin.setVisible(false);
+                txtPin.setVisible(false);
+                lblGMName.setVisible(false);
+                txtGMName.setVisible(false);
+                lblUsername.setVisible(true);
+                txtUsername.setVisible(true);
+                txtUsername.setEnabled(false);
+                
+                jcbGMName.removeAllItems();
+                userList.forEach((nom) -> {
+                    jcbGMName.addItem(nom.getGmName());
+                });
+                break;
+                
+            case 2://Update
+                clearFields();
+                btnProceed.setBackground(Color.yellow);
+                lblUsername.setVisible(true);
+                txtUsername.setVisible(true);
+                txtUsername.setEnabled(true);
+                lblPassword.setVisible(true);
+                txtPassword.setVisible(true);
+                txtPassword.setEnabled(true);
+                lblPin.setVisible(true);
+                txtPin.setVisible(true);
+                txtPin.setEnabled(true);
+                lblGMName.setVisible(true);
+                txtGMName.setVisible(true);
+                txtGMName.setEnabled(true);
+                lblGMRank.setVisible(true);
+                jcbRank.setVisible(true);
+                jcbRank.setEnabled(true);
+                jcbGMName.setVisible(true);
+                lblRemove.setVisible(true);
+                
+                jcbGMName.removeAllItems();
+                
+                userList.forEach((nom) -> {
+                    jcbGMName.addItem(nom.getGmName());
+                    if(nom.getGmName().equals(String.valueOf(jcbGMName.getSelectedItem()))){
+                        txtUsername.setText(nom.getNombre_usuario());
+                        txtPassword.setText("");
+                        txtPin.setText(String.valueOf(nom.getPin_usuario()));
+                        txtGMName.setText(nom.getGmName());
+                        jcbRank.setSelectedIndex(nom.getUserRank());
+                    }
+                });
+                break;
+        }
+    }
+    
+    private void clearFields(){
+        txtUsername.setText("");
+        txtPassword.setText("");
+        txtPin.setText("");
+        txtGMName.setText("");
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -388,7 +509,6 @@ public class ManageUsersFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnBackCancel;
     private javax.swing.JButton btnProceed;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -405,6 +525,7 @@ public class ManageUsersFrame extends javax.swing.JFrame {
     private javax.swing.JLabel txtAppTitle;
     private javax.swing.JTextField txtGMName;
     private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtPin;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import static javax.swing.JOptionPane.showMessageDialog;
 //import operations.DownloadFromDB;
 /**
@@ -133,6 +134,33 @@ public class User {
         }
     }
     
+    public ArrayList<User> getFullList(){
+        try {
+            query = "SELECT user_name FROM users";
+
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection(DB_PATH, DB_USER, DB_PASS);
+            sentencia = con.createStatement();
+            ResultSet resultado = sentencia.executeQuery(query);
+
+            ArrayList<User> fullList=new ArrayList<>();
+            while (resultado.next()) {
+                //showMessageDialog(null, "User: "+resultado.getString("user_name"));
+                fullList.add(new User(resultado.getString("user_name")));
+            }
+            return fullList;
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();//Remove later
+        }catch(CommunicationsException e){
+            showMessageDialog(null, "Error: System is no available right now.\n\n Error code: 01LSVE ");
+            System.exit(0);
+        }catch(SQLException e){
+            e.printStackTrace();//Remove later
+            showMessageDialog(null, "Error SQL.");
+        }
+        return null;
+    }
     
     
     //public boolean authActualUP(String user, String pass){
@@ -204,9 +232,99 @@ public class User {
         }
     }
     
-    public void createUser(String user, String pass, int pin, String gmName, int rankk){
-        int idd=0;
+    public void updateUser(String actualGMName,String user,String pass, int pin, String gmName, int rank){
         
+        try {
+            String optionals="";
+            String confirm="Next fields will be udpated:\n";
+            //User
+            if(!user.isEmpty()){
+                if(!optionals.isEmpty()){
+                    if(optionals.endsWith(",")){
+                        optionals+="user_name ='"+user+"' ";
+                    }else{
+                        optionals+=",user_name ='"+user+"' ";
+                    }
+                }else{
+                    optionals+="user_name ='"+user+"' ";
+                }
+                confirm+="\nUsername: "+user;
+            }
+            //Pass
+            if(!pass.isEmpty()){
+                if(!optionals.isEmpty()){
+                    if(optionals.endsWith(",")){
+                        optionals+="user_password ='"+pass+"' ";
+                    }else{
+                        optionals+=",user_password ='"+pass+"' ";
+                    }
+                }else{
+                    optionals+="user_password ='"+pass+"' ";
+                }
+                confirm+="\nPassword: "+pass;
+            }
+            //pin
+            if(!String.valueOf(pin).isEmpty()){
+                if(!optionals.isEmpty()){
+                    if(optionals.endsWith(",")){
+                        optionals+="user_pin ="+pin+" ";
+                    }else{
+                        optionals+=",user_pin ="+pin+" ";
+                    }
+                }else{
+                    optionals+="user_pin ="+pin+" ";
+                }
+                confirm+="\nPin: "+pin;
+            }
+            //GM Name
+            if(!gmName.isEmpty()){
+                if(!optionals.isEmpty()){
+                    if(optionals.endsWith(",")){
+                        optionals+="gm_name ='"+gmName+"' ";
+                    }else{
+                        optionals+=",gm_name ='"+gmName+"' ";
+                    }
+                }else{
+                    optionals+="gm_name ='"+gmName+"' ";
+                }
+                confirm+="\nGM Name: "+gmName;
+            }            
+            //Rank
+            if(!String.valueOf(rank).isEmpty()){
+                if(!optionals.isEmpty()){
+                    if(optionals.endsWith(",")){
+                        optionals+="gm_rank ="+rank+" ";
+                    }else{
+                        optionals+=",gm_rank ="+rank+" ";
+                    }
+                }else{
+                    optionals+="gm_rank ="+rank+" ";
+                }
+                confirm+="\nRank: "+rank;
+            }
+            
+            query="UPDATE users SET "+optionals+" WHERE users.gm_name = '"+actualGMName+"'";
+            
+            showMessageDialog(null,"QUERY:\n"+query+"\n\nData:\n"+confirm);
+            
+            Class.forName("com.mysql.jdbc.Driver");
+            sentencia.executeUpdate(query);
+            getDataFromDB();
+            showMessageDialog(null, "Updated successfully.");
+            
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch(CommunicationsException e){
+            showMessageDialog(null, "Error: System is no available right now.\n\n Error code: 01LSVE ");
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void createUser(String user, String pass, int pin, String gmName, int rankk){       
         try {
             //"INSERT INTO users VALUES (0, '"+user+"', '"+pass+"', "+pin+", '"+gmName+"', '0', 'null', '0', '0', "+rankk)
             query="INSERT INTO users VALUES (0, '"+user+"', '"+pass+"', "+pin+", '"+gmName+"', 0, 'null', 0, 0, "+rankk+")";
@@ -216,6 +334,25 @@ public class User {
             User uss=new User(user);
             
             showMessageDialog(null, "Created user with GM Name \""+uss.getGmName()+"\" and rank "+uss.getUserRank()+" successfully.\n\nPlease provide following details to the user:\nUsername: "+uss.getNombre_usuario()+"\nPassword: "+uss.getClave_usuario()+"\nTemporal pin: "+uss.getPin_usuario());
+            
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch(CommunicationsException e){
+            showMessageDialog(null, "Error: System is no available right now.\n\n Error code: 01LSVE ");
+            
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void removeUser(String gmName){
+        try {
+            query="DELETE FROM users WHERE users.gm_name='"+gmName+"'";
+            Class.forName("com.mysql.jdbc.Driver");
+            sentencia.executeUpdate(query);
+            showMessageDialog(null, "User '"+gmName+"' removed successfully.");
             
 
         } catch (ClassNotFoundException e) {

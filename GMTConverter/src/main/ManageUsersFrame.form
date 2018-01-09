@@ -160,18 +160,18 @@
                           <Component id="lblRemove" min="-2" max="-2" attributes="0"/>
                           <Component id="lblGMRank" min="-2" max="-2" attributes="0"/>
                           <Component id="lblGMName" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPin" min="-2" max="-2" attributes="0"/>
                           <Component id="lblPassword" min="-2" max="-2" attributes="0"/>
                           <Component id="lblUsername" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lblPin" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbRank" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jcbGMName" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="txtUsername" pref="80" max="32767" attributes="0"/>
                           <Component id="txtPassword" alignment="0" max="32767" attributes="0"/>
                           <Component id="txtGMName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtPin" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -197,8 +197,8 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblPin" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtPin" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -221,19 +221,14 @@
                 <Property name="text" type="java.lang.String" value="Username:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel6">
+            <Component class="javax.swing.JLabel" name="lblPin">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Pin:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblPin">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="-"/>
-              </Properties>
-            </Component>
             <Component class="javax.swing.JLabel" name="lblGMName">
               <Properties>
-                <Property name="text" type="java.lang.String" value="GM Name:"/>
+                <Property name="text" type="java.lang.String" value="New GM Name:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtGMName">
@@ -287,9 +282,14 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="jcbGMNameItemStateChanged"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtPin">
             </Component>
           </SubComponents>
         </Container>
