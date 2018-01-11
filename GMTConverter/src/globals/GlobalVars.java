@@ -15,9 +15,9 @@ public class GlobalVars {
     private final String pass;
     
     public GlobalVars(){
-        this.path="jdbc:mysql://den1.mysql4.gear.host/zmudb";
-        this.user="zmudb";
-        this.pass="Ph6rWv?O6g?9";
+        this.path="jdbc:mysql://den1.mysql4.gear.host/ura$$";
+        this.user="nein";
+        this.pass="nein";
     }
 
     public String getPath() {
